@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 67e7cf97-ebdc-4439-9a65-c2853b435c98
+      author: raphael-koszalka
+      changes:
+        - createTable:
+            tableName: url
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: original
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shortened
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 6ff90e57-e061-4498-86a0-3d63a7097a5e
+      author: raphael-koszalka
+      changes:
+        - addColumn:
+            catalogName: url
+            columns:
+              - column:
+                  name: expirationDate
+                  type: datetime
+            schemaName: public
+            tableName: url

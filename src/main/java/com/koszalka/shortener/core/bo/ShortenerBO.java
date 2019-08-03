@@ -1,5 +1,5 @@
 package com.koszalka.shortener.core.bo;
 
-public class UrlBO {
+public class ShortenerBO {
 
 }
