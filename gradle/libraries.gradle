@@ -1,0 +1,9 @@
+buildscript {
+    scriptHandler ->
+        apply from: "$rootDir/gradle/repositories.gradle", to: scriptHandler
+        scriptHandler.dependencies {
+            classpath "io.franzbecker:gradle-lombok:2.0"
+        }
+}
+
+apply plugin: io.franzbecker.gradle.lombok.LombokPlugin

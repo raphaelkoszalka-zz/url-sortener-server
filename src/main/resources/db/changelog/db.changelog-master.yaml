@@ -22,16 +22,13 @@ databaseChangeLog:
                   type: varchar(300)
                   constraints:
                     nullable: false
-
-  - changeSet:
-      id: 6ff90e57-e061-4498-86a0-3d63a7097a5e
-      author: raphael-koszalka
-      changes:
-        - addColumn:
-            catalogName: url
-            columns:
               - column:
-                  name: expirationDate
+                  name: expiration_date
                   type: datetime
+                  constraints:
+                    nullable: false
+        - createSequence:
+            incrementBy: 1
             schemaName: public
-            tableName: url
+            sequenceName: pk_sequence
+            startValue: 1
