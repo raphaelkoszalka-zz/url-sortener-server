@@ -9,14 +9,11 @@ import lombok.Setter;
 public class ShortenerDTO {
 
     private String originalUrl;
-    private String newUrl;
     private LocalDateTime expiresAt;
 
-    public ShortenerDTO(String newUrl, String originalUrl, LocalDateTime expiresAt) {
-        this.newUrl = newUrl;
+    public ShortenerDTO(String originalUrl, LocalDateTime expiresAt) {
         this.expiresAt = expiresAt;
         this.originalUrl = originalUrl;
     }
-
 
 }

@@ -5,17 +5,21 @@ import com.koszalka.shortener.persistence.dto.ShortenerDTO;
 import com.koszalka.shortener.persistence.dto.ShortenerPostResponseDTO;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.rest.api.ShortenerAPI;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ShortenerController implements ShortenerAPI {
 
     private final ShortenerBO shortenerBO;
+    private static final Logger logger = LoggerFactory.getLogger(ShortenerController.class);
+
 
     @Autowired
     public ShortenerController(ShortenerBO shortenerBO) {
@@ -28,16 +32,22 @@ public class ShortenerController implements ShortenerAPI {
     }
 
     @Override
-    public ResponseEntity postNewUrlString(ShortenerDTO dto) {
+    public ResponseEntity postNewUrlString(ShortenerDTO dto)  {
 
         ShortenerEntity entity = new ShortenerEntity();
         entity.setExpirationDate(LocalDateTime.now());
-        entity.setNewUrl(dto.getNewUrl());
         entity.setOriginal(dto.getOriginalUrl());
 
-        shortenerBO.saveOne(entity);
+        try {
+            if( shortenerBO.saveOne(entity)) {
+                return new ResponseEntity(HttpStatus.CREATED);
+            }
+        } catch (NoSuchAlgorithmException ex) {
+            logger.error("Error: " + ex);
+        }
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
     }
 
 }
