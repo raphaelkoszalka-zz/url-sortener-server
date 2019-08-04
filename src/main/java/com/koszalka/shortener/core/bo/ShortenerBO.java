@@ -5,6 +5,7 @@ import com.koszalka.shortener.core.utils.UrlShortenerValidationUtil;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.persistence.repositories.ShortenerRepository;
 import java.security.NoSuchAlgorithmException;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,12 @@ public class ShortenerBO {
     private boolean validateURL(String url) {
         UrlShortenerValidationUtil shortener = new UrlShortenerValidationUtil(url);
         return shortener.validateURL();
+    }
+
+    public void send301Redirect(HttpServletResponse response, String newUrl) {
+        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+        response.setHeader("Location", newUrl);
+        response.setHeader("Connection", "close");
     }
 
 

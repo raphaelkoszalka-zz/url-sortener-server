@@ -29,7 +29,7 @@ public class ShortenerController implements ShortenerAPI {
 
     @Override
     public void getUrlByString(HttpServletResponse response, String hash) {
-        send301Redirect(response, shortenerBO.getUrlFromHash(hash));
+        shortenerBO.send301Redirect(response, shortenerBO.getUrlFromHash(hash));
     }
 
     @Override
@@ -49,10 +49,6 @@ public class ShortenerController implements ShortenerAPI {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-    private void send301Redirect(HttpServletResponse response, String newUrl) {
-        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-        response.setHeader("Location", newUrl);
-        response.setHeader("Connection", "close");
-    }
+
 
 }
