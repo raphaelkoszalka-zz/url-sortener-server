@@ -1,6 +1,7 @@
 package com.koszalka.shortener.rest.api;
 
 import com.koszalka.shortener.persistence.dto.ShortenerDTO;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface  ShortenerAPI {
 
     @RequestMapping(path = "/{urlString}",method = RequestMethod.GET)
-    String getUrlByString(@PathVariable("urlString") String urlString);
+    void getUrlByString(HttpServletResponse response, @PathVariable("urlString") String urlString);
 
     @RequestMapping(path = "/new",method = RequestMethod.POST)
     ResponseEntity postNewUrlString(@RequestBody ShortenerDTO data);
+
 }
 

@@ -6,6 +6,7 @@ import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.rest.api.ShortenerAPI;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class ShortenerController implements ShortenerAPI {
     }
 
     @Override
-    public String getUrlByString(String hash) {
-        return shortenerBO.getUrlFromHash(hash);
+    public void getUrlByString(HttpServletResponse response, String hash) {
+        send301Redirect(response, shortenerBO.getUrlFromHash(hash));
     }
 
     @Override
@@ -45,9 +46,13 @@ public class ShortenerController implements ShortenerAPI {
         } catch (NoSuchAlgorithmException ex) {
             logger.error("Error: " + ex);
         }
-
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
 
+    private void send301Redirect(HttpServletResponse response, String newUrl) {
+        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+        response.setHeader("Location", newUrl);
+        response.setHeader("Connection", "close");
     }
 
 }
