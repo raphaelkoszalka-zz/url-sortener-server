@@ -2,7 +2,6 @@ package com.koszalka.shortener.rest.controllers;
 
 import com.koszalka.shortener.core.bo.ShortenerBO;
 import com.koszalka.shortener.persistence.dto.ShortenerDTO;
-import com.koszalka.shortener.persistence.dto.ShortenerPostResponseDTO;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.rest.api.ShortenerAPI;
 import java.security.NoSuchAlgorithmException;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class ShortenerController implements ShortenerAPI {
@@ -27,8 +27,8 @@ public class ShortenerController implements ShortenerAPI {
     }
 
     @Override
-    public ResponseEntity<ShortenerDTO> getUrlByString(String urlString) {
-        return null;
+    public String getUrlByString(String hash) {
+        return shortenerBO.getUrlFromHash(hash);
     }
 
     @Override

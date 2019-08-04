@@ -34,6 +34,10 @@ public class ShortenerBO {
         }
     }
 
+    public String getUrlFromHash(String hash) {
+        return shortenerRepository.getOriginalUrlFromHash(hash);
+    }
+
     private String shortenURL(String url) throws NoSuchAlgorithmException {
         UrlShortenerUtil shortener = new UrlShortenerUtil(url);
         return shortener.converStringToHash(url.getBytes());
