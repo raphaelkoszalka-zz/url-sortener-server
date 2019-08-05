@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UrlShortenerShuffle {
-    
+public class UrlShortenerShuffleUtil {
 
-    public UrlShortenerShuffle() {}
+    public UrlShortenerShuffleUtil() {}
 
     public String shuffle(String hash) {
         List<Character> characters = new ArrayList<Character>();
@@ -22,4 +21,5 @@ public class UrlShortenerShuffle {
         }
         return output.toString();
     }
+
 }

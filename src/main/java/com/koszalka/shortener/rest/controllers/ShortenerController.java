@@ -26,11 +26,6 @@ public class ShortenerController implements ShortenerAPI {
     }
 
     @Override
-    public void getUrlByString(HttpServletResponse response, String hash) {
-        shortenerBO.send301Redirect(response, shortenerBO.getUrlFromHash(hash));
-    }
-
-    @Override
     public ResponseEntity postNewUrlString(ShortenerDTO dto)  {
         ShortenerEntity entity = new ShortenerEntity();
         entity.setExpirationDate(dto.getExpiresAt());

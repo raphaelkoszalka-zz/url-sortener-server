@@ -1,6 +1,6 @@
 package com.koszalka.shortener.core.bo;
 
-import com.koszalka.shortener.utils.UrlShortenerShuffle;
+import com.koszalka.shortener.utils.UrlShortenerShuffleUtil;
 import com.koszalka.shortener.utils.UrlShortenerUtil;
 import com.koszalka.shortener.utils.UrlShortenerValidationUtil;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 public class ShortenerBO {
 
     private final ShortenerRepository shortenerRepository;
-    private final UrlShortenerShuffle urlShortenerShuffle;
+    private final UrlShortenerShuffleUtil urlShortenerShuffle;
 
     @Autowired
-    public ShortenerBO(ShortenerRepository shortenerRepository, UrlShortenerShuffle urlShortenerShuffle) {
+    public ShortenerBO(ShortenerRepository shortenerRepository, UrlShortenerShuffleUtil urlShortenerShuffle) {
         this.shortenerRepository = shortenerRepository;
         this.urlShortenerShuffle = urlShortenerShuffle;
     }
