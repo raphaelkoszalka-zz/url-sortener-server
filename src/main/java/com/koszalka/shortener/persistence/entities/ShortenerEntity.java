@@ -30,6 +30,6 @@ public class ShortenerEntity {
     private String newUrl;
 
     @Column(name = "expirationDate", nullable = false)
-    private LocalDateTime expirationDate;
+    private Long expirationDate;
 
 }

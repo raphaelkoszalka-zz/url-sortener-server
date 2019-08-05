@@ -6,24 +6,22 @@ import java.security.NoSuchAlgorithmException;
 
 public class UrlShortenerUtil {
 
-    private String url;
+    byte[] dataBytes;
 
-    public UrlShortenerUtil(String url) {
-        this.url = url;
+    public UrlShortenerUtil(byte[] dataBytes) {
+        this.dataBytes = dataBytes;
     }
 
-    public String converStringToHash(byte[] dataBytes) throws NoSuchAlgorithmException {
-        if( dataBytes == null) return "";
+    public String converStringToHash() throws NoSuchAlgorithmException {
+        if(dataBytes == null) return "";
 
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(dataBytes);
         byte[] digest = md.digest();
 
-        // convert it to the hexadecimal
         BigInteger bi = new BigInteger(digest);
         String s = bi.toString(16);
-        if( s.length() %2 != 0)
-        {
+        if( s.length() %2 != 0) {
             s = "0"+s;
         }
         return s;

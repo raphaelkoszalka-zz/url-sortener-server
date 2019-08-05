@@ -24,7 +24,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: expiration_date
-                  type: datetime
+                  type: bigint
                   constraints:
                     nullable: false
         - createSequence:

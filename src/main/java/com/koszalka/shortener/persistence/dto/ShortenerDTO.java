@@ -1,6 +1,5 @@
 package com.koszalka.shortener.persistence.dto;
 
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +8,10 @@ import lombok.Setter;
 public class ShortenerDTO {
 
     private String originalUrl;
-    private LocalDateTime expiresAt;
+    // epoch time, we could use LocalDateTime also, but i'm following the guidelines @ your README.md.
+    private Long expiresAt;
 
-    public ShortenerDTO(String originalUrl, LocalDateTime expiresAt) {
+    public ShortenerDTO(String originalUrl, Long expiresAt) {
         this.expiresAt = expiresAt;
         this.originalUrl = originalUrl;
     }

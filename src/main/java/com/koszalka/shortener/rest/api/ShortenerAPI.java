@@ -14,7 +14,7 @@ public interface  ShortenerAPI {
     @RequestMapping(path = "/{urlString}",method = RequestMethod.GET)
     void getUrlByString(HttpServletResponse response, @PathVariable("urlString") String urlString);
 
-    @RequestMapping(path = "/new",method = RequestMethod.POST)
+    @RequestMapping(path = "/new", method = RequestMethod.POST)
     ResponseEntity postNewUrlString(@RequestBody ShortenerDTO data);
 
 }

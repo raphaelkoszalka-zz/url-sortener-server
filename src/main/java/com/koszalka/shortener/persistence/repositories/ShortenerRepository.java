@@ -9,9 +9,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShortenerRepository extends JpaRepository<ShortenerEntity, Long> {
 
-    @Query("SELECT short.original "
+    @Query("SELECT short.original"
         + " FROM ShortenerEntity as short"
         + " WHERE short.newUrl = :hash")
     String getOriginalUrlFromHash(@Param("hash") String hash);
+
+    @Query("SELECT COUNT(short.id)"
+        + " FROM ShortenerEntity as short"
+        + " WHERE short.newUrl = :hash")
+    Long verifyCollision(@Param("hash") String hash);
 
 }
