@@ -28,7 +28,7 @@ public class ShortenerBO {
         if (verifyCollision(hash) > 0) {
             if (validateURL(entity.getOriginal())) {
                 hash = shortenURL(entity.getOriginal());
-                entity.setNewUrl(hash);
+                entity.setHash(hash);
                 shortenerRepository.save(entity);
                 return true;
             } else {
@@ -36,7 +36,7 @@ public class ShortenerBO {
             }
         }
 
-        entity.setNewUrl(urlShortenerShuffle.shuffle(hash));
+        entity.setHash(urlShortenerShuffle.shuffle(hash));
         shuffleHash(entity);
         return true;
     }

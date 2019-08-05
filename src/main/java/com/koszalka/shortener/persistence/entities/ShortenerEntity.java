@@ -23,11 +23,11 @@ public class ShortenerEntity {
     @SequenceGenerator(name = "pk_sequence", sequenceName = "pk_sequence", allocationSize = 1, initialValue = 1, schema = "public")
     private Long id;
 
-    @Column(name = "original", nullable = false)
+    @Column(name = "url", nullable = false)
     private String original;
 
-    @Column(name = "shortened", nullable = false)
-    private String newUrl;
+    @Column(name = "has", nullable = false)
+    private String hash;
 
     @Column(name = "expirationDate", nullable = false)
     private Long expirationDate;

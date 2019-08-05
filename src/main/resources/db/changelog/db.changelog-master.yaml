@@ -13,12 +13,12 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: original
+                  name: url
                   type: varchar(300)
                   constraints:
                     nullable: false
               - column:
-                  name: shortened
+                  name: hash
                   type: varchar(300)
                   constraints:
                     nullable: false

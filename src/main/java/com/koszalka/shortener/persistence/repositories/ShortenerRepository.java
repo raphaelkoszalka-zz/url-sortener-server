@@ -11,12 +11,12 @@ public interface ShortenerRepository extends JpaRepository<ShortenerEntity, Long
 
     @Query("SELECT short.original"
         + " FROM ShortenerEntity as short"
-        + " WHERE short.newUrl = :hash")
+        + " WHERE short.getHash = :hash")
     String getOriginalUrlFromHash(@Param("hash") String hash);
 
     @Query("SELECT COUNT(short.id)"
         + " FROM ShortenerEntity as short"
-        + " WHERE short.newUrl = :hash")
+        + " WHERE short.getHash = :hash")
     Long verifyCollision(@Param("hash") String hash);
 
 }
