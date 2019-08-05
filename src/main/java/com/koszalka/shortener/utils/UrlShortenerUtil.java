@@ -1,8 +1,9 @@
-package com.koszalka.shortener.core.utils;
+package com.koszalka.shortener.utils;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.stereotype.Service;
 
 public class UrlShortenerUtil {
 

@@ -1,8 +1,9 @@
-package com.koszalka.shortener.core.utils;
+package com.koszalka.shortener.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
+import org.springframework.stereotype.Service;
 
 public class UrlShortenerValidationUtil {
 

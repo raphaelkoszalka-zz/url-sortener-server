@@ -1,12 +1,11 @@
 package com.koszalka.shortener.core.bo;
 
-import com.koszalka.shortener.core.utils.UrlShortenerUtil;
-import com.koszalka.shortener.core.utils.UrlShortenerValidationUtil;
+import com.koszalka.shortener.utils.UrlShortenerShuffle;
+import com.koszalka.shortener.utils.UrlShortenerUtil;
+import com.koszalka.shortener.utils.UrlShortenerValidationUtil;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.persistence.repositories.ShortenerRepository;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Comparator;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,52 +14,39 @@ import org.springframework.stereotype.Service;
 public class ShortenerBO {
 
     private final ShortenerRepository shortenerRepository;
+    private final UrlShortenerShuffle urlShortenerShuffle;
 
     @Autowired
-    public ShortenerBO(ShortenerRepository shortenerRepository) {
+    public ShortenerBO(ShortenerRepository shortenerRepository, UrlShortenerShuffle urlShortenerShuffle) {
         this.shortenerRepository = shortenerRepository;
+        this.urlShortenerShuffle = urlShortenerShuffle;
     }
 
-    public boolean saveOne(ShortenerEntity entity, boolean firstTime) throws NoSuchAlgorithmException {
+    public boolean saveOne(ShortenerEntity entity) throws NoSuchAlgorithmException {
         String hash = "";
-        if (validateURL(entity.getOriginal()) && firstTime) {
-            hash = shortenURL(entity.getOriginal());
-            entity.setNewUrl(hash);
-            shortenerRepository.save(entity);
-            return true;
+
+        if (verifyCollision(hash) > 0) {
+            if (validateURL(entity.getOriginal())) {
+                hash = shortenURL(entity.getOriginal());
+                entity.setNewUrl(hash);
+                shortenerRepository.save(entity);
+                return true;
+            } else {
+                return false;
+            }
         }
-        if (verifyCollision(hash) == 0) {
-            entity.setNewUrl(hash);
-            shortenerRepository.save(entity);
-            return true;
-        } else {
-            entity.setNewUrl(sortString(hash));
-            saveOne(entity, false);
-        }
-        return false;
+
+        entity.setNewUrl(urlShortenerShuffle.shuffle(hash));
+        shuffleHash(entity);
+        return true;
+    }
+
+    private void shuffleHash(ShortenerEntity entity) {
+        shortenerRepository.save(entity);
     }
 
     public String getUrlFromHash(String hash) {
         return shortenerRepository.getOriginalUrlFromHash(hash);
-    }
-
-    private String sortString(String inputString) {
-        Character tempArray[] = new Character[inputString.length()];
-        for (int i = 0; i < inputString.length(); i++) {
-            tempArray[i] = inputString.charAt(i);
-        }
-        Arrays.sort(tempArray, new Comparator<Character>(){
-            @Override
-            public int compare(Character c1, Character c2) {
-                return Character.compare(Character.toLowerCase(c1), Character.toLowerCase(c2));
-            }
-        });
-        StringBuilder sb = new StringBuilder(tempArray.length);
-        for (Character c : tempArray) {
-            sb.append(c.charValue());
-        }
-        String test = sb.toString();
-        return sb.toString();
     }
 
     private String shortenURL(String url) throws NoSuchAlgorithmException {

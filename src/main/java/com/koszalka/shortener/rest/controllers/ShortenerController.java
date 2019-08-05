@@ -36,7 +36,7 @@ public class ShortenerController implements ShortenerAPI {
         entity.setExpirationDate(dto.getExpiresAt());
         entity.setOriginal(dto.getOriginalUrl());
         try {
-            if( shortenerBO.saveOne(entity, true)) {
+            if( shortenerBO.saveOne(entity)) {
                 return new ResponseEntity(HttpStatus.CREATED);
             }
         } catch (NoSuchAlgorithmException ex) {
