@@ -1,5 +1,6 @@
-package com.koszalka.shortener.core.bo;
+package com.koszalka.shortener.bo;
 
+import com.koszalka.shortener.constants.AppConstants;
 import com.koszalka.shortener.utils.UrlShortenerUtil;
 import com.koszalka.shortener.utils.UrlShortenerValidationUtil;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
@@ -11,9 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShortenerBO {
 
-    private final static String ALREADY_EXISTS = "exists";
-    private final static String SAVED = "saved";
-    private final static String BAD_REQUEST = "bad_request";
+
     private final ShortenerRepository shortenerRepository;
 
     @Autowired
@@ -27,18 +26,17 @@ public class ShortenerBO {
             int stringId = urlShortenerUtil.tinyUrlToId(entity.getOriginal());
             String hash = urlShortenerUtil.idToTinyUrl(stringId);
             if (verifyIfHashAlreadyExist(hash) > 0) {
-                return ALREADY_EXISTS;
+                return hash;
             }
             entity.setHash(hash);
             shortenerRepository.save(entity);
-            return SAVED;
+            return hash;
         }
-        return BAD_REQUEST;
+        return AppConstants.BAD_REQUEST.getValue();
     }
 
     public ShortenerEntity getUrlFromHash(String hash) {
-        ShortenerEntity entity = shortenerRepository.getOriginalUrlFromHash(hash);
-        return entity;
+        return shortenerRepository.getOriginalUrlFromHash(hash);
     }
 
     private boolean validateURL(String url) {
@@ -50,7 +48,7 @@ public class ShortenerBO {
         return shortenerRepository.verifyIfHashAlreadyExist(hash);
     }
 
-    public void send301Redirect(HttpServletResponse response, String newUrl) {
+    public void send301Redirect(HttpServletResponse response, String newUrl, Long expiresAt) {
         response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
         response.setHeader("Location", newUrl);
         response.setHeader("Connection", "close");

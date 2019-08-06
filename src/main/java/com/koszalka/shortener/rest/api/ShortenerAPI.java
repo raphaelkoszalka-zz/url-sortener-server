@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@RequestMapping(path = "/short")
+@RequestMapping(path = "/v1")
 public interface  ShortenerAPI {
 
     @RequestMapping(path = "/{urlString}",method = RequestMethod.GET)
     void getUrlByString(HttpServletResponse response, @PathVariable("urlString") String urlString);
 
     @RequestMapping(path = "/new", method = RequestMethod.POST)
-    ResponseEntity postNewUrlString(@RequestBody ShortenerDTO data);
+    ResponseEntity<ShortenerDTO> postNewUrlString(@RequestBody ShortenerDTO data);
 
 }
 
