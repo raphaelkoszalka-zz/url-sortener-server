@@ -1,31 +1,32 @@
 package com.koszalka.shortener.utils;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import org.springframework.stereotype.Service;
-
 public class UrlShortenerUtil {
 
-    byte[] dataBytes;
+    private static final String STRING_MAP = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    public UrlShortenerUtil(byte[] dataBytes) {
-        this.dataBytes = dataBytes;
+    public UrlShortenerUtil() {}
+
+    public String idToTinyUrl(int id) {
+        StringBuilder tinyUrl = new StringBuilder();
+        while(id>0) {
+            tinyUrl.append(STRING_MAP.charAt(id%62));
+            id /= 62;
+        }
+        return tinyUrl.reverse().toString();
     }
 
-    public String converStringToHash() throws NoSuchAlgorithmException {
-        if(dataBytes == null) return "";
+    public int tinyUrlToId(String tinyUrl) {
+        int id = 0;
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(dataBytes);
-        byte[] digest = md.digest();
-
-        BigInteger bi = new BigInteger(digest);
-        String s = bi.toString(16);
-        if( s.length() %2 != 0) {
-            s = "0"+s;
+        for(int i=0;i<tinyUrl.length();i++) {
+            id = (id*62) + STRING_MAP.indexOf(tinyUrl.charAt(i));
         }
-        return s;
+
+        if (id < 0) {
+            id = id * -1;
+        }
+
+        return id;
     }
 
 

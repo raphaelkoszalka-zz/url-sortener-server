@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@RequestMapping(path = "")
+@RequestMapping(path = "/")
 public interface  RedirectAPI {
 
     @RequestMapping(path = "/{urlString}",method = RequestMethod.GET)

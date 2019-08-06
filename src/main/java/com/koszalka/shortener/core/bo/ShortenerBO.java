@@ -1,11 +1,9 @@
 package com.koszalka.shortener.core.bo;
 
-import com.koszalka.shortener.utils.UrlShortenerShuffleUtil;
 import com.koszalka.shortener.utils.UrlShortenerUtil;
 import com.koszalka.shortener.utils.UrlShortenerValidationUtil;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.persistence.repositories.ShortenerRepository;
-import java.security.NoSuchAlgorithmException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,45 +11,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShortenerBO {
 
+    private final static String ALREADY_EXISTS = "exists";
+    private final static String SAVED = "saved";
+    private final static String BAD_REQUEST = "bad_request";
     private final ShortenerRepository shortenerRepository;
-    private final UrlShortenerShuffleUtil urlShortenerShuffle;
 
     @Autowired
-    public ShortenerBO(ShortenerRepository shortenerRepository, UrlShortenerShuffleUtil urlShortenerShuffle) {
+    public ShortenerBO(ShortenerRepository shortenerRepository) {
         this.shortenerRepository = shortenerRepository;
-        this.urlShortenerShuffle = urlShortenerShuffle;
     }
 
-    public boolean saveOne(ShortenerEntity entity) throws NoSuchAlgorithmException {
-        String hash = "";
-
-        if (verifyCollision(hash) > 0) {
-            if (validateURL(entity.getOriginal())) {
-                hash = shortenURL(entity.getOriginal());
-                entity.setHash(hash);
-                shortenerRepository.save(entity);
-                return true;
-            } else {
-                return false;
+    public String saveOne(ShortenerEntity entity)  {
+        if (validateURL(entity.getOriginal())) {
+            UrlShortenerUtil urlShortenerUtil = new UrlShortenerUtil();
+            int stringId = urlShortenerUtil.tinyUrlToId(entity.getOriginal());
+            String hash = urlShortenerUtil.idToTinyUrl(stringId);
+            if (verifyIfHashAlreadyExist(hash) > 0) {
+                return ALREADY_EXISTS;
             }
+            entity.setHash(hash);
+            shortenerRepository.save(entity);
+            return SAVED;
         }
-
-        entity.setHash(urlShortenerShuffle.shuffle(hash));
-        shuffleHash(entity);
-        return true;
+        return BAD_REQUEST;
     }
 
-    private void shuffleHash(ShortenerEntity entity) {
-        shortenerRepository.save(entity);
-    }
-
-    public String getUrlFromHash(String hash) {
-        return shortenerRepository.getOriginalUrlFromHash(hash);
-    }
-
-    private String shortenURL(String url) throws NoSuchAlgorithmException {
-        UrlShortenerUtil shortener = new UrlShortenerUtil(url.getBytes());
-        return shortener.converStringToHash();
+    public ShortenerEntity getUrlFromHash(String hash) {
+        ShortenerEntity entity = shortenerRepository.getOriginalUrlFromHash(hash);
+        return entity;
     }
 
     private boolean validateURL(String url) {
@@ -59,8 +46,8 @@ public class ShortenerBO {
         return shortener.validateURL();
     }
 
-    private Long verifyCollision(String hash) {
-        return shortenerRepository.verifyCollision(hash);
+    private Long verifyIfHashAlreadyExist(String hash) {
+        return shortenerRepository.verifyIfHashAlreadyExist(hash);
     }
 
     public void send301Redirect(HttpServletResponse response, String newUrl) {

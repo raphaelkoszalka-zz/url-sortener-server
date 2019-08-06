@@ -3,12 +3,11 @@ package com.koszalka.shortener.rest.controllers;
 import com.koszalka.shortener.core.bo.ShortenerBO;
 import com.koszalka.shortener.persistence.dto.ShortenerDTO;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
+import com.koszalka.shortener.rest.api.RedirectAPI;
 import com.koszalka.shortener.rest.api.ShortenerAPI;
-import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShortenerController implements ShortenerAPI {
 
     private final ShortenerBO shortenerBO;
-    private static final Logger logger = LoggerFactory.getLogger(ShortenerController.class);
 
 
     @Autowired
@@ -26,20 +24,34 @@ public class ShortenerController implements ShortenerAPI {
     }
 
     @Override
+    public void getUrlByString(HttpServletResponse response, String hash) {
+        long now = Instant.now().toEpochMilli();
+        ShortenerEntity entity = shortenerBO.getUrlFromHash(hash);
+        if (now > entity.getExpirationDate()) {
+            shortenerBO.send301Redirect(response, entity.getOriginal());
+        } else {
+            redirectIsGone();
+        }
+    }
+
+    private ResponseEntity redirectIsGone() {
+        return new ResponseEntity(HttpStatus.GONE);
+    }
+
+    @Override
     public ResponseEntity postNewUrlString(ShortenerDTO dto)  {
         ShortenerEntity entity = new ShortenerEntity();
         entity.setExpirationDate(dto.getExpiresAt());
         entity.setOriginal(dto.getOriginalUrl());
-        try {
-            if( shortenerBO.saveOne(entity)) {
-                return new ResponseEntity(HttpStatus.CREATED);
-            }
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error("Error: " + ex);
+        if(shortenerBO.saveOne(entity).equals("saved")) {
+            // redirect id saved with success
+            return new ResponseEntity(HttpStatus.CREATED);
+        } else if (shortenerBO.saveOne(entity).equals("exists")) {
+            // redirect id already exists on database
+            return new ResponseEntity(HttpStatus.CONFLICT);
         }
+        // url invalid
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-
-
 
 }

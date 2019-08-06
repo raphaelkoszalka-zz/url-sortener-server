@@ -1,6 +1,5 @@
 package com.koszalka.shortener.persistence.entities;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,14 +18,14 @@ public class ShortenerEntity {
 
     @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pk_sequence")
-    @SequenceGenerator(name = "pk_sequence", sequenceName = "pk_sequence", allocationSize = 1, initialValue = 1, schema = "public")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "short_sequence")
+    @SequenceGenerator(name = "short_sequence", sequenceName = "short_sequence", allocationSize = 1, initialValue = 1, schema = "public")
     private Long id;
 
     @Column(name = "url", nullable = false)
     private String original;
 
-    @Column(name = "has", nullable = false)
+    @Column(name = "hash", nullable = false)
     private String hash;
 
     @Column(name = "expirationDate", nullable = false)

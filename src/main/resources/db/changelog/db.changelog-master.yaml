@@ -30,5 +30,5 @@ databaseChangeLog:
         - createSequence:
             incrementBy: 1
             schemaName: public
-            sequenceName: pk_sequence
+            sequenceName: short_sequence
             startValue: 1
