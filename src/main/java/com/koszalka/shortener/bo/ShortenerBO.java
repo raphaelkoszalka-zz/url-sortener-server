@@ -1,12 +1,15 @@
 package com.koszalka.shortener.bo;
 
 import com.koszalka.shortener.constants.AppConstants;
+import com.koszalka.shortener.persistence.dto.ShortenerDTO;
 import com.koszalka.shortener.utils.UrlShortenerUtil;
 import com.koszalka.shortener.utils.UrlShortenerValidationUtil;
 import com.koszalka.shortener.persistence.entities.ShortenerEntity;
 import com.koszalka.shortener.persistence.repositories.ShortenerRepository;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,9 +51,10 @@ public class ShortenerBO {
         return shortenerRepository.verifyIfHashAlreadyExist(hash);
     }
 
-    public void send301Redirect(HttpServletResponse response, String newUrl, Long expiresAt) {
+    public ResponseEntity<ShortenerDTO> send301Redirect(HttpServletResponse response, String newUrl) {
         response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
         response.setHeader("Location", newUrl);
         response.setHeader("Connection", "close");
+        return new ResponseEntity<ShortenerDTO>(HttpStatus.MOVED_PERMANENTLY);
     }
 }

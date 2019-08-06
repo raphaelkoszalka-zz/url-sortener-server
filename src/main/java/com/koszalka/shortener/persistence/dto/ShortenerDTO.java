@@ -1,10 +1,12 @@
 package com.koszalka.shortener.persistence.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ShortenerDTO {
 
     private String originalUrl;

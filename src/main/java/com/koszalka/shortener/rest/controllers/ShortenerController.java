@@ -23,22 +23,17 @@ public class ShortenerController implements ShortenerAPI {
     }
 
     @Override
-    public void getUrlByString(HttpServletResponse response, String hash) {
-        long now = Instant.now().toEpochMilli();
+    public ResponseEntity<ShortenerDTO> getUrlByString(HttpServletResponse response, String hash) {
         ShortenerEntity entity = shortenerBO.getUrlFromHash(hash);
-        if (now < entity.getExpirationDate()) {
-            shortenerBO.send301Redirect(response, entity.getOriginal(), entity.getExpirationDate());
-        } else {
-            redirectIsGone();
+        if (Instant.now().toEpochMilli() > entity.getExpirationDate()) {
+            return new ResponseEntity<ShortenerDTO>(HttpStatus.GONE);
         }
-    }
-
-    private ResponseEntity redirectIsGone() {
-        return new ResponseEntity(HttpStatus.GONE);
+        return shortenerBO.send301Redirect(response, entity.getOriginal());
     }
 
     @Override
     public ResponseEntity<ShortenerDTO> postNewUrlString(ShortenerDTO dto)  {
+
         ShortenerEntity entity = new ShortenerEntity();
         entity.setExpirationDate(dto.getExpiresAt());
         entity.setOriginal(dto.getOriginalUrl());
