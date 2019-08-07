@@ -26,9 +26,9 @@ public class ShortenerBO {
     public String saveOne(ShortenerEntity entity)  {
         if (validateURL(entity.getOriginal())) {
             UrlShortenerUtil urlShortenerUtil = new UrlShortenerUtil();
-            int stringId = urlShortenerUtil.tinyUrlToId(entity.getOriginal());
-            String hash = urlShortenerUtil.idToTinyUrl(stringId);
-            if (verifyIfHashAlreadyExist(hash) > 0) {
+            int stringId = urlShortenerUtil.urlToId(entity.getOriginal() + entity.getExpirationDate());
+            String hash = urlShortenerUtil.idToUrl(stringId);
+            if (verifyIfHashAlreadyExist(hash, entity.getExpirationDate()) > 0) {
                 return hash;
             }
             entity.setHash(hash);
@@ -47,8 +47,8 @@ public class ShortenerBO {
         return shortener.validateURL();
     }
 
-    private Long verifyIfHashAlreadyExist(String hash) {
-        return shortenerRepository.verifyIfHashAlreadyExist(hash);
+    private Long verifyIfHashAlreadyExist(String hash, Long expirationDate) {
+        return shortenerRepository.verifyIfHashAlreadyExist(hash, expirationDate);
     }
 
     public ResponseEntity<ShortenerDTO> send301Redirect(HttpServletResponse response, String newUrl) {

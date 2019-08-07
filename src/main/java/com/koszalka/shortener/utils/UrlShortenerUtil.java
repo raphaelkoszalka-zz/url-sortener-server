@@ -6,7 +6,7 @@ public class UrlShortenerUtil {
 
     public UrlShortenerUtil() {}
 
-    public String idToTinyUrl(int id) {
+    public String idToUrl(int id) {
         StringBuilder tinyUrl = new StringBuilder();
         while(id>0) {
             tinyUrl.append(STRING_MAP.charAt(id%62));
@@ -15,7 +15,7 @@ public class UrlShortenerUtil {
         return tinyUrl.reverse().toString();
     }
 
-    public int tinyUrlToId(String tinyUrl) {
+    public int urlToId(String tinyUrl) {
         int id = 0;
 
         for(int i=0;i<tinyUrl.length();i++) {

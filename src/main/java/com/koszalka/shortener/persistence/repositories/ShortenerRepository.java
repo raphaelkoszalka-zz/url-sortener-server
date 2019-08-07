@@ -16,7 +16,8 @@ public interface ShortenerRepository extends JpaRepository<ShortenerEntity, Long
 
     @Query("SELECT COUNT(short.id)"
         + " FROM ShortenerEntity as short"
-        + " WHERE short.hash = :hash")
-    Long verifyIfHashAlreadyExist(@Param("hash") String hash);
+        + " WHERE short.hash = :hash"
+        + " AND short.expirationDate = :expirationDate")
+    Long verifyIfHashAlreadyExist(@Param("hash") String hash, @Param("expirationDate") Long expirationDate);
 
 }
