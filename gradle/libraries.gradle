@@ -1,9 +1,23 @@
-buildscript {
-    scriptHandler ->
-        apply from: "$rootDir/gradle/repositories.gradle", to: scriptHandler
-        scriptHandler.dependencies {
-            classpath "io.franzbecker:gradle-lombok:2.0"
-        }
-}
+ext.database = [
+        liquibase : "org.liquibase:liquibase-core",
+        postgreSQL: "org.postgresql:postgresql",
+        h2        : "com.h2database:h2",
+        liquibase : 'org.liquibase:liquibase-core'
+]
 
-apply plugin: io.franzbecker.gradle.lombok.LombokPlugin
+ext.junit5 = [
+        api   : "org.junit.jupiter:junit-jupiter-api",
+        engine: "org.junit.jupiter:junit-jupiter-engine"
+]
+
+ext.spring = [
+        boot : [
+                jpa :  "org.springframework.boot:spring-boot-starter-data-jpa",
+                jersey : "org.springframework.boot:spring-boot-starter-jersey",
+                web : "org.springframework.boot:spring-boot-starter-web"
+        ]
+]
+
+ex.lombok = [
+        plugin : "org.projectlombok:lombok:1.18.4"
+]
